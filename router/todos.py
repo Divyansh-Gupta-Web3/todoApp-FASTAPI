@@ -39,7 +39,7 @@ async def read_all(db: Session = Depends(get_db)):
     return db.query(models.Todos).all()
 
 
-@router.get("/todos/user")
+@router.get("/user")
 async def read_all_by_user(user: dict = Depends(get_current_user),
                            db: Session = Depends(get_db)):
     if user is None:
@@ -49,7 +49,7 @@ async def read_all_by_user(user: dict = Depends(get_current_user),
         .all()
 
 
-@router.get("/todo/{todo_id}")
+@router.get("/{todo_id}")
 async def read_todo(todo_id: int,
                     user: dict = Depends(get_current_user),
                     db: Session = Depends(get_db)):

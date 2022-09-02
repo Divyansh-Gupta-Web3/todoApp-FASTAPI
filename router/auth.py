@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append('../..')
 
 from fastapi import Depends, HTTPException, status, APIRouter
@@ -32,6 +33,11 @@ router = APIRouter(
     tags=["Auth"],
     responses={401: {"description": "Unauthorized"}}
 )
+
+class UserVerification(BaseModel):
+    username: str
+    password: str
+    new_password: str
 
 def get_db():
     try:
@@ -97,6 +103,15 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     token = create_access_token(user.username, user.id, token_expire)
     return {"access_token": token}
 
+@router.put("/ChangePassword")
+async def change_password(user_verification: UserVerification, db: Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.username == user_verification.username).filter(
+        models.Users.hashed_password == user_verification.password).first()
+    if not user:
+        raise token_exceptions()
+    user.hashed_password = user_verification.new_password
+    db.commit()
+    return {"message": "Password changed"}
 
 # Exceptions
 def get_user_exceptions():
