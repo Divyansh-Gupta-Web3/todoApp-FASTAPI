@@ -30,7 +30,6 @@ class Todo(BaseModel):
 async def read_all(db: Session = Depends(get_db)):
     return db.query(models.Todos).all()
 
-
 @app.get("/todos/user")
 async def read_all_by_user(user: dict = Depends(get_current_user),
                            db: Session = Depends(get_db)):
