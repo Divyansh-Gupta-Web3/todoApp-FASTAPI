@@ -1,5 +1,4 @@
 import sys
-
 sys.path.append('../..')
 
 from fastapi import Depends, HTTPException, status, APIRouter
